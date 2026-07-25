@@ -390,7 +390,13 @@ a glance.
 
 ![The redundancy arc. Eleven sections, three groups, the whole MIE, and three sufficiency
 conditions, all as paired per-question effects on judge score with 95% confidence intervals.
-Necessity is null everywhere; total value and the sufficiency of the query group are not.](./redundancy_arc.png)
+Necessity is null everywhere; total value and the sufficiency of the query group are not. Rows are
+comparable within a block but not across blocks: the two necessity blocks pair against their own
+baselines (17.13/20 for the sections, a separate in-batch 16.88/20 for the groups and the whole
+MIE), while sufficiency is measured against the no-MIE condition rather than against a baseline.
+The section and group rows are trimmed analyses; the whole-MIE and sufficiency rows are untrimmed
+(the whole MIE is +0.91 ± 0.72 trimmed), so the sum-versus-whole comparison in the panel title
+spans both treatments.](./redundancy_arc.png)
 
 ## Two secondary findings
 
