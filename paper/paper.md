@@ -569,6 +569,21 @@ executable query carries the shape, an instance, and the trap simultaneously, in
 agent will actually need them, and — unlike prose — it can be executed and checked. This is the
 design claim we would defend beyond TogoMCP.
 
+We have modest evidence that it already travels. One of the 36 databases in the corpus is not a
+life-science resource at all: SuperCon, the NIMS superconducting-materials database, whose
+`discovery` categories are *materials* and *physics* where every other file reads as biology. Its
+MIE file has the same five parts, nine examples all verified and dated, and a first-class
+set-level enumeration example exactly as §4.4 requires. The one structural difference is that it
+carries no `cross_db` example — not because the format could not express one, but because the
+database has nothing to join to. That is the format reporting a fact about the resource rather
+than bending to it.
+
+A single case is not a demonstration. But the rules the ablations motivated are stated in terms of
+an agent's need for query-construction context and the recoverability of a given fact, neither of
+which is specific to biology — or, for that matter, to RDF. The obvious next test is whether the
+same measure-then-redesign loop reproduces on a structured resource of an entirely different
+shape.
+
 **Compression preferentially destroys positive routes.** The q066 failure has a general shape: a
 mechanism that is both the way to do something and a hazard when doing something else survives
 compression as its warning, which reads to an agent as *avoid this*. Anyone summarizing
@@ -611,9 +626,15 @@ TogoMCP is at <https://togomcp.rdfportal.org/> and its source, including the abl
 100-question benchmark, and the durable findings records this report draws on, at
 <https://github.com/dbcls/togomcp>. The MIE v3 corpus and format specification ship in release
 **v2.0.0**, which flipped the served corpus to v3 and retired the now-redundant database-discovery
-tools. This report and its sources are at <https://github.com/arkinjo/mie-redesign>.
+tools.
 
-*TODO: mint a Zenodo DOI for the v2.0.0 release and the benchmark snapshot, and cite it here.*
+That release is archived on Zenodo as a citable snapshot, under CC-BY 4.0:
+doi:[10.5281/zenodo.21543297](https://doi.org/10.5281/zenodo.21543297)
+[@citesAsDataSource:TogoMCPv200]. It contains the full v3 corpus, the MIE v3 specification, the
+ablation and equivalence harnesses, the 100-question benchmark, and the `FINDINGS.md` records
+from which every number in this report is drawn.
+
+This report and its sources are at <https://github.com/arkinjo/mie-redesign>.
 
 # Acknowledgements
 
