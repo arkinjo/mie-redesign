@@ -28,14 +28,16 @@ date: 24 July 2026
 abstract: |
   MIE files are per-database YAML documents that TogoMCP supplies to a large language model at
   query time so it can compose SPARQL against the DBCLS RDF Portal. Ours had grown to eleven
-  hand-authored sections across 36 databases, each added because someone believed it would help,
-  none ever measured. We measured them, in eighteen ablation conditions across four families:
+  sections, semi-automatically generated for each of 36 databases and reviewed by hand. Each
+  section had been introduced in response to a systematic query failure observed in use — sound
+  practice, but it left open whether any section still earned its tokens once the other ten were
+  present. We measured that, in eighteen ablation conditions across four families:
   is a section necessary, is a functional group necessary, is the whole document worth anything,
   and is any one group sufficient alone. No single section and no single group is necessary.
   Removing the entire document costs 0.9 points out of 20, and the query-construction group alone
   recovers 99% of that — the whole is worth roughly 2.7 times the sum of its parts, the signature
   of heavy redundancy. We rebuilt the format around that evidence, making the verified executable
-  example the atomic unit: 36 files, 302 examples, each 29-65% smaller than the file it replaces.
+  example the atomic unit: 36 files, 303 examples, each 29–65% smaller than the file it replaces.
   A pre-registered equivalence run over 100 benchmark questions finds v3 statistically
   indistinguishable from v2 in answer quality (+0.29/20, 95% CI [-0.09, +0.68]) while using 15%
   fewer input tokens, costing 15% less and running 6% faster, with the factoid-question score up
@@ -52,31 +54,45 @@ biohackathon_url: "https://2025.biohackathon.org/"
 biohackathon_location: "Mie, Japan, 2025"
 group: MIE redesign
 git_url: https://github.com/arkinjo/mie-redesign
-authors_short: Kinjo \emph{et al.}
+authors_short: 'Kinjo \& Yamamoto'
 ---
 
 
 # Introduction
 
-TogoMCP exposes the RDF Portal knowledge graph maintained by DBCLS — which aggregates roughly 60
-life-science databases — to large language models through the Model Context Protocol, so that a
-researcher can ask a biological question in natural language and have an agent compose,
+TogoMCP exposes the RDF Portal knowledge graph maintained by DBCLS
+[@usesDataFrom:kawashima2018rdfportal] — which aggregates roughly 60 life-science databases — to
+large language models through the Model Context Protocol [@citesAsAuthority:MCP2025Spec], so that
+a researcher can ask a biological question in natural language and have an agent compose,
 execute, and interpret the SPARQL that answers it [@citesAsAuthority:Kinjo2026TogoMCP]. The
 mechanism that makes this work is not the model's SPARQL fluency but the **MIE**
 (Metadata-Interoperability-Exchange) file: a per-database YAML document, delivered to the model
 at query time, that supplies the schema-level context the model cannot invent — the non-obvious
-predicates, the join paths, the count and graph traps, and worked example queries.
+predicates, the join paths, the count and graph traps, and worked example queries. Supplying
+schema context at query time rather than relying on the model's own recall is the design other
+recent text-to-SPARQL systems converge on as well
+[@citesAsAuthority:emonet2024sparql; @citesAsAuthority:zahera2024cotsparql].
 
-An MIE file is, in other words, documentation written for a machine reader. Ours had grown
-organically to eleven hand-authored sections per database across 36 databases. Each section was
-added because someone believed it would help. Nobody had ever checked whether it did.
+An MIE file is, in other words, documentation written for a machine reader — and largely written
+*by* one: the files are produced semi-automatically, by a pipeline of automated schema discovery,
+LLM-assisted drafting, validation against the live endpoint, and expert review, at roughly two to
+four hours of expert effort per database [@citesAsAuthority:Kinjo2026TogoMCP]. What that pipeline
+emits is fixed by the specification, which had grown to eleven sections.
 
-This is not an idle question of tidiness. Every byte of an MIE file is re-read on every turn of
-every session, so the cost is recurring and multiplied across the whole corpus; and the token
-budget spent on documentation is a budget not spent on reasoning or on query results. Stated
-generally: **what belongs in a "schema card" for an LLM agent, and how would you know?**
-Anyone building an MCP server over a structured resource — a database, an API, a filesystem —
-faces the same question, usually answers it by intuition, and rarely gets any feedback.
+Those sections were not guesses. Each was introduced in response to a *systematic failure*
+observed in use: a class of SPARQL query that kept going wrong the same way, documented so it
+would stop going wrong. That is a sound way to build documentation, and it is the reason the
+corpus works. What it does not establish is whether any given section still earns its tokens once
+the other ten are present — because a failure mode can be fixed in more than one place, and eleven
+rounds of locally-correct fixes need not add up to a well-proportioned document. Nobody had
+checked.
+
+The checking matters because the cost is recurring. Every byte of an MIE file is re-read on every
+turn of every session and multiplied across the whole corpus, and the token budget spent on
+documentation is a budget not spent on reasoning or on query results. Stated generally: **what
+belongs in a "schema card" for an LLM agent, and how would you know?** Anyone building an MCP
+server over a structured resource — a database, an API, a filesystem — accumulates an answer the
+way we did, one observed failure at a time, and rarely gets any signal about the result.
 
 We set out to answer it empirically for TogoMCP, and this report is about the answer and the way
 we got it. Our contributions are four:
@@ -109,9 +125,10 @@ report.
 TogoMCP is a FastMCP server that mounts several sub-servers behind a common surface. Its two
 load-bearing tools are `run_sparql`, which executes a query against a named RDF database, and
 `get_MIE_file`, which returns that database's MIE document. Around them sit REST wrappers
-(UniProt, ChEMBL, PDB, PubChem, Reactome, Rhea, MeSH) and identifier services (TogoID, NCBI
-E-utilities, TogoVar). The published description of the system and its original 50-question
-evaluation is in *Database* [@citesAsAuthority:Kinjo2026TogoMCP]; that work established that MIE
+(UniProt, ChEMBL, PDB, PubChem, Reactome, Rhea, MeSH) and identifier services (TogoID
+[@citesForInformation:kawano2022togoid], NCBI E-utilities, TogoVar). The published description of
+the system and its original 50-question evaluation is in *Database*
+[@citesAsAuthority:Kinjo2026TogoMCP]; that work established that MIE
 files help **in aggregate**. The present work asks which parts of them do.
 
 TogoMCP currently documents **36 of the portal's databases, one MIE file each** — and those 36 are
@@ -120,6 +137,16 @@ many-to-one structure is not incidental to this report: a query that fails to sc
 right named graph silently ranges over its neighbours, so co-tenancy is a recurring source of
 count inflation and one of the things an MIE file exists to warn about. It is why the v3 header
 carries an explicit `co_hosted` flag for every dataset sharing an endpoint.
+
+How those files come into being matters for what follows. Each is generated by a four-phase
+pipeline — schema discovery by a prescribed series of exploratory SPARQL queries; LLM-assisted
+drafting into the specified sections; validation of every example against the live endpoint; and
+a final expert review for domain accuracy — implemented as an agent skill and costing roughly two
+to four hours of expert effort per database. Two consequences follow. The specification is not
+merely a style guide but a *generation target*: whatever sections it names are what gets
+produced, for every database. And because a human reviews each file, the corpus is expensive
+enough that nobody rewrites it casually. Changing the format is therefore a corpus-wide, 36-file,
+expert-reviewed commitment — which is precisely why we wanted evidence before making one.
 
 The format has a BioHackathon lineage of its own. It was largely formalized at the DBCLS
 BioHackathon 2025 in Mie Prefecture, within a project on MCP server tools backed by RDF shapes
@@ -154,13 +181,22 @@ executable step. Three modes of expression, one underlying fact, three separate 
 If that hypothesis were right, no single section would ever look necessary, because its siblings
 would cover for it.
 
+The triplication is not hard to account for, given how the sections arrived. A newly observed
+failure — the model misusing some predicate — can be forestalled by tightening the shape, by
+adding a sample triple, or by supplying a worked query, and any of the three is a defensible
+response. Over eleven such rounds, spread across time and authors, the same underlying facts
+accumulate in several places at once. Every individual decision is locally correct; the aggregate
+is redundant. This is a property of incremental, failure-driven documentation in general, not a
+lapse peculiar to us, and it is exactly the property that a leave-one-out ablation cannot see.
+
 Measurements are against an internal benchmark of **100 biologically grounded questions**,
 20 in each of five types (`yes_no`, `factoid`, `list`, `summary`, `choice`), spanning 34
 databases, with creation-time coverage targets of at least 60% requiring two or more databases
 and at least 20% requiring three or more. Questions were screened so that the answer is not
 recoverable from the published literature — live database access is necessary. Answers are scored
-by an LLM judge on four criteria (recall, precision, non-redundancy, readability), 1–5 each, for a
-total of **4–20**; a binary exact-answer grader runs alongside on the gradable subset. Answering
+by an LLM judge [@usesMethodIn:zheng2023llmjudge] on four criteria (recall, precision,
+non-redundancy, readability) [@usesMethodIn:tsatsaronis2015bioasq], 1–5 each, for a total of
+**4–20**; a binary exact-answer grader runs alongside on the gradable subset. Answering
 used `claude-sonnet-4-5` throughout; judging used Claude Opus through the Anthropic API with
 forced tool use, pinned to `claude-opus-4-8` for the section sweep and left at the evaluation
 default for later sweeps.
@@ -220,11 +256,12 @@ ceiling (20/20) and floor (<12/20) questions alongside untrimmed ones. Multiple-
 thresholds are stated per family: |z| > 2.84 for the eleven sections, |z| > 2.39 for each
 three-condition family, and |z| > 1.96 for the single planned whole-MIE comparison.
 
-To let others budget: each condition was 40 pilot questions × 3 replicates. The section sweep
-was 12 conditions at roughly US\$845 and 72 hours of wall clock; the group sweep, 4 conditions at
-roughly US\$265 and 27.5 hours. The whole-MIE and keep-one-group sweeps added four more
-conditions on top of that. This is not a cheap experiment, which is itself an argument for
-designing it carefully before starting.
+To let others budget: each condition was 40 pilot questions × 3 replicates. The section sweep was
+12 conditions — a baseline plus the eleven leave-one-outs — at roughly US\$845 and 72 hours of
+wall clock; the group sweep, 4 conditions (a baseline plus three groups) at roughly US\$265 and
+27.5 hours. The whole-MIE and keep-one-group sweeps added four more conditions on top of that,
+pairing against the group sweep's baseline rather than re-running one of their own. This is not a
+cheap experiment, which is itself an argument for designing it carefully before starting.
 
 # Results I: the redundancy arc
 
@@ -261,10 +298,13 @@ null is bounded, not merely asserted.
 ## No single group is necessary either
 
 Removing an entire functional group was also null on the judge score. Removing the **whole query
-group — 53% of the MIE by bytes — cost +0.20 ± 0.40 points**. That figure needs the caveat
-attached to it rather than deferred: the query group contains `schema_info`, so this condition
-also broke the database-discovery tool, making it partly a discovery-breakage-then-recovery result
-rather than a clean measurement of query-construction content (Trap 3). The whole-MIE condition
+group — 53% of the MIE by bytes — cost +0.20 ± 0.40 points**. This is a separate batch with its
+own in-batch baseline, 16.88/20 trimmed; the whole-MIE and keep-one-group conditions below pair
+against that same baseline rather than against the section sweep's 17.13. That figure needs the
+caveat attached to it rather than deferred: the query group contains `schema_info`, so this
+condition also broke the database-discovery tool, making it partly a
+discovery-breakage-then-recovery result rather than a clean measurement of query-construction
+content (Trap 3). The whole-MIE condition
 below, which leaves discovery working, is the clean read. The pre-registered prediction,
 formed by summing the single-section effects, was that `guardrails` would lead; it came last, at
 +0.04. The summation heuristic had no predictive value.
@@ -281,10 +321,16 @@ covering for each other, removing a whole group should have exposed the loss, an
 The escalation reversed that reading. Blocking `get_MIE_file` entirely cost **+0.93 ± 0.68
 (z = 2.68)** on the judge score, stable across judging treatments (+0.88 ± 0.66 with five judges;
 +0.91 ± 0.72 trimmed), p of about 0.007–0.02 against the |z| > 1.96 bar for a single planned comparison.
-Validity was confirmed server-side: zero `get_MIE_file` executions, with 13 blocked attempts —
-the model still reflexively reached for it on about 7% of questions.
+Validity was confirmed server-side: zero `get_MIE_file` executions, with 13 blocked attempts
+across the condition — the model still reflexively reached for it.
 
-Table: The redundancy arc. The whole is worth roughly 2.7× the sum of its parts.
+One caveat by our own Trap 1: this condition pairs against the group sweep's baseline rather than
+against one re-run beside it. The effect is large against that baseline's own replicate drift of
+±0.35, so it survives a worst-case baseline shift — but a fresh in-batch baseline would have been
+the better design, and we say so having just made the rule.
+
+Table: The redundancy arc. The whole is worth roughly 2.7× the sum of its parts. The section and
+group rows are trimmed analyses; the whole-MIE row is untrimmed (+0.91 ± 0.72 trimmed).
 
 | Removed | Contribution | Significant? |
 | --- | ---: | --- |
@@ -303,8 +349,9 @@ load-bearing because the others cover.
 The sufficiency complement completes the picture. Each `keep_<group>` condition retains only that
 group and strips the other two; sufficiency is measured against the no-MIE condition.
 
-Table: Leave-one-in (sufficiency). "% gap" is the share of the +0.93 whole-MIE effect recovered;
-"complement" is what removing that group from the full MIE costs.
+Table: Leave-one-in (sufficiency), untrimmed. "% gap" is the share of the +0.93 whole-MIE effect
+recovered; "complement" (baseline - keep) is what removing the *other* two groups costs. An
+asterisk marks a confidence interval excluding zero.
 
 | Group kept | Sufficiency (± 95% CI) | z | % gap | Complement |
 | --- | ---: | ---: | ---: | ---: |
@@ -409,10 +456,12 @@ vivid: `input_tokens: 10` against `cache_creation_input_tokens: 20,366` on the s
 redesign's own target metric was structurally unmeasurable** until this was fixed. The same fix
 removed a latent double-count that the under-reporting had been masking.
 
-**8. Spurious content-policy refusals contaminate agent benchmarks.** Roughly 5% of cells returned
-a near-identical refusal message on benign microbiology questions; four questions were refused by
-*both* arms on every replicate and measure nothing at all. Because a refusal floors a cell at
-4/20, an imbalanced split distorts a delta badly: one batch's raw +1.31 fell to **+0.58** once
+**8. Spurious content-policy refusals contaminate agent benchmarks.** 6.3% of cells returned
+a near-identical refusal message on benign microbiology questions — 7.0% of the v2 arm against
+5.7% of v3, so not quite the balanced split it looks like in aggregate. Four questions measure
+nothing at all: two were refused on every replicate of *both* arms, and two more on every
+replicate of one arm, which leaves the pair with no comparable cell. Because a refusal floors a
+cell at 4/20, an imbalanced split distorts a delta badly: one batch's raw +1.31 fell to **+0.58** once
 refusals were excluded — a genuine edge survived, but more than half the apparent effect was
 refusal luck rather than capability. At the level of a single question the distortion can account
 for the entire apparent result: one question's -5.3 vanished completely once its refused cells
@@ -453,7 +502,7 @@ Six authoring rules carry the design, each with a reason:
   `get_MIE_file(database, level=...)` can serve tiers.
 - **§4.6 Illustrative subjects must not be drawn from the benchmark.** Also discussed below.
 
-The resulting corpus is 36 files containing **302 examples**, each **29–65% smaller** than the v2
+The resulting corpus is 36 files containing **303 examples**, each **29–65% smaller** than the v2
 file it replaces. Two files were hand-authored as pilots and 34 were delegated one agent per
 database, each independently re-validated by the caller rather than trusted on the builder's own
 check. Live verification during authoring caught real errors in the *v2* corpus along the way — a
@@ -465,10 +514,10 @@ the token budget.
 
 The release gate was declared in advance as an **equivalence** test, not as "did the score go
 up?" Three criteria, fixed before any data was collected: bytes down (deterministic, no
-statistics required), judge score flat within a **±0.5/20** margin, and factoid correctness
-up-or-flat. Framing it this way mattered — with a ceiling-limited benchmark, a redesign whose
-purpose is compression should be *asked* to prove non-inferiority, not allowed to fish for an
-improvement.
+statistics required), judge score non-regressing against a **-0.5/20** margin, and the factoid
+judge score up-or-flat. Framing it this way mattered — with a ceiling-limited benchmark, a
+redesign whose purpose is compression should be *asked* to prove non-inferiority, not allowed to
+fish for an improvement.
 
 ## The smoke test bought us a rule
 
@@ -496,7 +545,9 @@ produces at its first step. That made the recovery partly circular: the corpus n
 waypoint on the path to the answer. We swapped the illustrative subject to a neutral one (SH3
 domain) and re-ran: the agent generalized the idiom to LIM domain and scored 18 on all three
 replicates, with no LIM entity anywhere in the corpus. The de-overfit version outperformed the
-overfit one. That produced
+overfit one. (This targeted three-replicate re-run was the one measurement we took under
+subscription rather than API authentication — see Trap 6 — but at this size the signal is
+unambiguous.) That produced
 **§4.6**, the no-test-leakage rule, which matters generally now that documentation and evaluation
 sets are both routinely authored with model assistance.
 
@@ -541,14 +592,15 @@ Table: Change in judge score by question type at n=100 (refusal-clean).
 | summary | -0.42 |
 
 Factoid questions — the query-construction and aggregation cases the executable worked examples
-target directly — gain a full point. The recall sub-score rises +0.16 overall, corroborating that
-v3 retrieves the right facts at least as often. The single soft spot is `summary`, where v3's
-terseness offers less scaffolding for open-ended prose synthesis; several of those questions are
+target directly — gain a full point, which discharges the third gate criterion. The recall
+sub-score rises +0.16 overall, corroborating that v3 retrieves the right facts at least as often.
+The single soft spot is `summary`, where v3's terseness
+offers less scaffolding for open-ended prose synthesis; several of those questions are
 shared blind spots that trip v2 equally.
 
 The deterministic win, measured at runtime rather than inferred from file sizes:
 
-Table: Per-question runtime cost at n=100 (279 clean v2 cells, 282 clean v3).
+Table: Per-question runtime cost at n=100 (279 clean v2 cells and 282 clean v3, of 300 each).
 
 | Metric (per question) | v2 | v3 | Change |
 | --- | ---: | ---: | ---: |
@@ -565,10 +617,10 @@ payloads and accumulated reasoning all persist alongside it. The dominant term i
 which is precisely the recurring cost: a smaller document is re-read from cache on every turn of
 every session. On this run alone the v3 arm cost about US\$20 less than the v2 arm.
 
-One data-quality caveat, stated plainly: spurious content-policy refusals contaminated roughly 5%
-of cells, balanced across arms in aggregate, and rendered four questions unmeasurable in both
-arms. Those are excluded from the clean verdict; the equivalence conclusion rests on the 96
-measurable questions.
+One data-quality caveat, stated plainly: spurious content-policy refusals contaminated 6.3% of
+cells, slightly more of the v2 arm than of v3 (21 against 17 of 300 each), and rendered four
+questions unmeasurable. Those are excluded from the clean verdict; the equivalence conclusion
+rests on the 96 measurable questions.
 
 # Discussion
 
@@ -585,6 +637,15 @@ least informative experiment because leave-one-out is the reflexive first move, 
 before we had any estimate of the total effect it was trying to decompose. Measure the whole
 first; it costs one condition, and it tells you whether the decomposition you were planning is
 affordable or arithmetically hopeless.
+
+**Failure-driven documentation accretes redundancy, and cannot notice.** Our eleven sections each
+came from a real observed failure, which is why the corpus works — and also why it triplicated.
+A given failure can be answered in several places, each answer is locally correct, and nothing in
+the process ever revisits whether an earlier answer already covered it. The accumulation is
+monotone: sections are added when something breaks, and removed never, because removing one has
+no visible consequence — which is precisely what our leave-one-out results confirm. Any project
+that documents reactively should expect this, and should expect that its own null ablations will
+be read, wrongly, as evidence that the content is dead.
 
 **The verified example is the right atomic unit for LLM-facing schema documentation.** A single
 executable query carries the shape, an instance, and the trap simultaneously, in the form the
@@ -624,8 +685,8 @@ question set is a cheap general guard.
 
 **Limitations.** A single answering model and a single judge family; one benchmark, whose ceiling
 of roughly 17/20 caps the effect sizes that can be resolved; a 40-question pilot for the
-ablations, where our best near-miss would have needed n of about 73–88; LLM-as-judge scoring, with its
-known biases; roughly 5% refusal contamination; and an equivalence result that is equivalence,
+ablations, where our best near-miss would have needed n of about 73; LLM-as-judge scoring, with its
+known biases; 6.3% refusal contamination; and an equivalence result that is equivalence,
 not superiority. We also measured a single format against a single alternative — v3 is evidence
 that *this* reorganization preserves value at fewer tokens, not that it is optimal.
 
