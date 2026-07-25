@@ -128,8 +128,21 @@ load-bearing tools are `run_sparql`, which executes a query against a named RDF 
 (UniProt, ChEMBL, PDB, PubChem, Reactome, Rhea, MeSH) and identifier services (TogoID
 [@citesForInformation:kawano2022togoid], NCBI E-utilities, TogoVar). The published description of
 the system and its original 50-question evaluation is in *Database*
-[@citesAsAuthority:Kinjo2026TogoMCP]; that work established that MIE
-files help **in aggregate**. The present work asks which parts of them do.
+[@citesAsAuthority:Kinjo2026TogoMCP]; that work established that the tool-augmented system as a
+whole, MIE files included, substantially outperforms an unaided LLM. The present work asks a
+question interior to the system: given that it works, which parts of the documentation are
+carrying it?
+
+**A note on the word "baseline," because the two studies use it for opposite things.** In the
+earlier work, the baseline is the *unaided* LLM — no tools at all — and every condition is scored
+by how far it improves on that. In this report, the baseline is the *fully equipped* system:
+TogoMCP serving the complete MIE corpus, which is the best configuration available rather than
+the worst, and every ablation is scored by how much removing something costs relative to it. The
+earlier design measures the distance from nothing to something; ours measures the dent made by
+taking a piece out of something that already works. A consequence worth keeping in view is that
+our effects are bounded by a much narrower range — the earlier study had roughly 3.5 points of
+headroom over its baseline, whereas ours starts at 17/20 and the entire document is worth 0.9 of
+the remaining 3.
 
 TogoMCP currently documents **36 of the portal's databases, one MIE file each** — and those 36 are
 served by only **ten distinct SPARQL endpoints**. Sixteen of them share a single endpoint. That
