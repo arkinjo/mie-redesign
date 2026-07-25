@@ -25,6 +25,23 @@ affiliations:
     ror: 018q2r417
     index: 2
 date: 24 July 2026
+abstract: |
+  MIE files are per-database YAML documents that TogoMCP supplies to a large language model at
+  query time so it can compose SPARQL against the DBCLS RDF Portal. Ours had grown to eleven
+  hand-authored sections across 36 databases, each added because someone believed it would help,
+  none ever measured. We measured them, in eighteen ablation conditions across four families:
+  is a section necessary, is a functional group necessary, is the whole document worth anything,
+  and is any one group sufficient alone. No single section and no single group is necessary.
+  Removing the entire document costs 0.9 points out of 20, and the query-construction group alone
+  recovers 99% of that — the whole is worth roughly 2.7 times the sum of its parts, the signature
+  of heavy redundancy. We rebuilt the format around that evidence, making the verified executable
+  example the atomic unit: 36 files, 302 examples, each 29-65% smaller than the file it replaces.
+  A pre-registered equivalence run over 100 benchmark questions finds v3 statistically
+  indistinguishable from v2 in answer quality (+0.29/20, 95% CI [-0.09, +0.68]) while using 15%
+  fewer input tokens, costing 15% less and running 6% faster, with the factoid-question score up
+  a full point. We also report eight measurement traps that faked or destroyed signal, and one
+  budgeting error worth more than the results: we spent the most on the least informative
+  experiment, and say what we would do instead.
 cito-bibliography: paper.bib
 # Filed under BH25JP, the BioHackathon at which the MIE format was formalized.
 # The work reported here was carried out at Togothon (see Acknowledgements), which
