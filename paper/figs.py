@@ -6,10 +6,14 @@ TogoMCP repository:
   benchmark/ablation/FINDINGS.md           (Figs 1-2)
   benchmark/redesign/release/FINDINGS.md   (Fig 3)
 """
+from pathlib import Path
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+
+OUT = Path(__file__).resolve().parent
 
 INK = "#1c1c1c"
 MUTED = "#8a8a8a"
@@ -31,7 +35,7 @@ plt.rcParams.update({
 })
 
 
-# ---------------------------------------------------------------- Figure 2
+# ---------------------------------------------------------------- Figure 1
 def redundancy_arc():
     """Forest plot: the four ablation families on one axis."""
     # (label, estimate, half-CI, family)
@@ -133,12 +137,20 @@ def redundancy_arc():
             "† schema_info — and the query group that contains it — also disables the "
             "find_databases discovery tool, making these dual ablations\n"
             "rather than clean leave-one-outs. Shaded band = the whole-MIE effect "
-            "(+0.88 to +0.93).",
+            "(+0.88 to +0.93).\n"
+            "Rows are comparable within a block, not across blocks: the two necessity "
+            "blocks pair against their own baselines (17.13/20 for the\n"
+            "sections, a separate in-batch 16.88/20 for the groups and the whole MIE), "
+            "while sufficiency is measured against the no-MIE\n"
+            "condition rather than against a baseline.\n"
+            "Section and group rows are trimmed analyses; the whole-MIE and sufficiency "
+            "rows are untrimmed (whole MIE = +0.91 ± 0.72 trimmed).\n"
+            "The Σ-versus-whole comparison in the title therefore spans both treatments.",
             transform=ax.transAxes, fontsize=7.2, color="#666666",
             va="top", linespacing=1.6)
 
     fig.tight_layout()
-    fig.savefig("/home/claude/out/redundancy_arc.png", bbox_inches="tight",
+    fig.savefig(OUT / "redundancy_arc.png", bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
 
@@ -187,12 +199,12 @@ def ci_ladder():
             transform=ax.transAxes, fontsize=8.0, color="#555555", va="bottom")
 
     fig.tight_layout()
-    fig.savefig("/home/claude/out/ci_ladder.png", bbox_inches="tight",
+    fig.savefig(OUT / "ci_ladder.png", bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
 
 
-# ---------------------------------------------------------------- Figure 1
+# ---------------------------------------------------------------- Figure 2
 def format_map():
     """v2.3's 11 author-function sections -> v3's 5 need-based parts."""
     v2 = [
@@ -291,15 +303,13 @@ def format_map():
             "one verified query IS the shape, the sample triple, and the annotated trap.",
             fontsize=7.4, color="#555555", va="top", linespacing=1.6, style="italic")
 
-    fig.savefig("/home/claude/out/format_map.png", bbox_inches="tight",
+    fig.savefig(OUT / "format_map.png", bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
 
 
 if __name__ == "__main__":
-    import os
-    os.makedirs("/home/claude/out", exist_ok=True)
     format_map()
     redundancy_arc()
     ci_ladder()
-    print("ok")
+    print(f"ok — three PNGs written to {OUT}")
