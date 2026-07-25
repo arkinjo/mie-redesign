@@ -137,7 +137,15 @@ def redundancy_arc():
             "† schema_info — and the query group that contains it — also disables the "
             "find_databases discovery tool, making these dual ablations\n"
             "rather than clean leave-one-outs. Shaded band = the whole-MIE effect "
-            "(+0.88 to +0.93).",
+            "(+0.88 to +0.93).\n"
+            "Rows are comparable within a block, not across blocks: the two necessity "
+            "blocks pair against their own baselines (17.13/20 for the\n"
+            "sections, a separate in-batch 16.88/20 for the groups and the whole MIE), "
+            "while sufficiency is measured against the no-MIE\n"
+            "condition rather than against a baseline.\n"
+            "Section and group rows are trimmed analyses; the whole-MIE and sufficiency "
+            "rows are untrimmed (whole MIE = +0.91 ± 0.72 trimmed).\n"
+            "The Σ-versus-whole comparison in the title therefore spans both treatments.",
             transform=ax.transAxes, fontsize=7.2, color="#666666",
             va="top", linespacing=1.6)
 
