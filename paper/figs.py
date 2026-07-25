@@ -272,10 +272,18 @@ def format_map():
             fontsize=9.4, fontweight="bold")
     ax.text(RX, 11.75, "MIE v3 — 5 need-based parts",
             fontsize=9.4, fontweight="bold")
-    for lbl, c, x in [("query (53% of bytes)", ACCENT, LX),
-                      ("guardrails (25%)", HOT, LX + 1.78),
-                      ("orientation (22%)", "#6b6b6b", LX + 3.42)]:
-        ax.text(x, 11.30, lbl, fontsize=6.8, color=c, fontweight="bold")
+    # Lay the group legend out left-to-right using measured text widths, so the
+    # items can never collide regardless of font metrics.
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    inv = ax.transData.inverted()
+    x = LX
+    for lbl, c in [("query (53% of bytes)", ACCENT),
+                   ("guardrails (25%)", HOT),
+                   ("orientation (22%)", "#6b6b6b")]:
+        t = ax.text(x, 11.30, lbl, fontsize=6.8, color=c, fontweight="bold")
+        bb = t.get_window_extent(renderer=renderer)
+        x = inv.transform((bb.x1, bb.y0))[0] + 0.30
 
     ax.text(LX, -0.55,
             "Dashed = no section of its own survives. shape_expressions and "
