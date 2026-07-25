@@ -35,7 +35,7 @@ plt.rcParams.update({
 })
 
 
-# ---------------------------------------------------------------- Figure 2
+# ---------------------------------------------------------------- Figure 1
 def redundancy_arc():
     """Forest plot: the four ablation families on one axis."""
     # (label, estimate, half-CI, family)
@@ -196,7 +196,7 @@ def ci_ladder():
     plt.close(fig)
 
 
-# ---------------------------------------------------------------- Figure 1
+# ---------------------------------------------------------------- Figure 2
 def format_map():
     """v2.3's 11 author-function sections -> v3's 5 need-based parts."""
     v2 = [
