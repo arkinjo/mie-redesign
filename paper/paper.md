@@ -26,12 +26,13 @@ affiliations:
     index: 2
 date: 24 July 2026
 cito-bibliography: paper.bib
-# TODO(meeting): registration of Togothon with BioHackrXiv is in progress;
-#   update `event:` to the assigned short code once it is issued.
-event: Togothon166
-biohackathon_name: "Togothon 166"
-biohackathon_url: "https://dbcls.github.io/Togothon/"
-biohackathon_location: "CRIK Shinanomachi, Tokyo, Japan, 2026"
+# Filed under BH25JP, the BioHackathon at which the MIE format was formalized.
+# The work reported here was carried out at Togothon (see Acknowledgements), which
+# is not yet a registered BioHackrXiv meeting; registration is in progress.
+event: BH25JP
+biohackathon_name: "DBCLS BioHackathon 2025"
+biohackathon_url: "https://2025.biohackathon.org/"
+biohackathon_location: "Mie, Japan, 2025"
 group: MIE redesign
 git_url: https://github.com/arkinjo/mie-redesign
 authors_short: Kinjo \emph{et al.}
@@ -104,10 +105,14 @@ count inflation and one of the things an MIE file exists to warn about. It is wh
 carries an explicit `co_hosted` flag for every dataset sharing an endpoint.
 
 The format has a BioHackathon lineage of its own. It was largely formalized at the DBCLS
-BioHackathon 2025 in Mie Prefecture, and takes its name from there; the backronym
-*Metadata-Interoperability-Exchange* was suggested by Jose-Emilio Labra Gayo. What follows is
-therefore a hackathon artifact being revised at a hackathon, which is perhaps the natural life
-cycle for this kind of thing.
+BioHackathon 2025 in Mie Prefecture, within a project on MCP server tools backed by RDF shapes
+[@extends:citesAsSourceDocument:LabraGayo2025MCPShapes], and takes its name from that prefecture;
+the backronym *Metadata-Interoperability-Exchange* was suggested by Jose-Emilio Labra Gayo. The
+measurement and redesign reported here were carried out a year later at **Togothon**, the monthly
+knowledge-graph meeting DBCLS has run since its SPARQLthon days. So this is a hackathon artifact
+revised at a hackathon — which is perhaps the natural life cycle for this kind of thing, and an
+argument for the smaller recurring meeting as the place where the unglamorous follow-up work
+actually gets done.
 
 Version 2.3 of the MIE format specified eleven sections. For the ablations we assigned each to
 one of three functional groups, which turned out to be the more useful unit of analysis.
@@ -638,8 +643,13 @@ This report and its sources are at <https://github.com/arkinjo/mie-redesign>.
 
 # Acknowledgements
 
-We thank the DBCLS Togothon community for discussion, Jose-Emilio Labra Gayo for naming the MIE
-format at the DBCLS BioHackathon 2025, and the maintainers of the RDF Portal endpoints whose data
-made the benchmark possible.
+This work was carried out at **Togothon**, the monthly knowledge-graph development meeting
+organized by DBCLS (formerly SPARQLthon), and specifically at Togothon 166, 23–24 July 2026. As
+Togothon is not currently a registered BioHackrXiv meeting, this report is filed under the DBCLS
+BioHackathon 2025 (BH25JP), at which the MIE format it revises was formalized.
+
+We thank the Togothon community for discussion, Jose-Emilio Labra Gayo for naming the MIE format
+at the DBCLS BioHackathon 2025, and the maintainers of the RDF Portal endpoints whose data made
+the benchmark possible.
 
 # References
