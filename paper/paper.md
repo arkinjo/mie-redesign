@@ -228,17 +228,17 @@ question, n=34 after ceiling/floor exclusions. Positive means removing the secti
 | `critical_warnings` | +0.14 ± 0.62 | +0.43 |
 | `data_statistics` | +0.07 ± 0.66 | +0.21 |
 | `anti_patterns` | +0.04 ± 0.40 | +0.19 |
-| `cross_references` | −0.06 ± 0.52 | −0.22 |
-| `sample_rdf_entries` | −0.08 ± 0.63 | −0.24 |
-| `sparql_query_examples` | −0.13 ± 0.57 | −0.44 |
-| `shape_expressions` | −0.15 ± 0.54 | −0.53 |
+| `cross_references` | -0.06 ± 0.52 | -0.22 |
+| `sample_rdf_entries` | -0.08 ± 0.63 | -0.24 |
+| `sparql_query_examples` | -0.13 ± 0.57 | -0.44 |
+| `shape_expressions` | -0.15 ± 0.54 | -0.53 |
 
 † Not a clean leave-one-out — see Trap 3.
 
-`common_errors` is the one near-miss, at nominal p ≈ 0.052 and the only section pointing the same
+`common_errors` is the one near-miss, at nominal p of about 0.052 and the only section pointing the same
 way on both quality and effort. **It is not a finding.** Eleven sections were tested; the
 corrected threshold is |z| > 2.84, and one borderline hit in eleven is roughly what chance
-produces. Scaling from its effect size, resolving it after correction would need n ≈ 73 — so the
+produces. Scaling from its effect size, resolving it after correction would need n of about 73 — so the
 null is bounded, not merely asserted.
 
 ## No single group is necessary either
@@ -263,7 +263,7 @@ covering for each other, removing a whole group should have exposed the loss, an
 
 The escalation reversed that reading. Blocking `get_MIE_file` entirely cost **+0.93 ± 0.68
 (z = 2.68)** on the judge score, stable across judging treatments (+0.88 ± 0.66 with five judges;
-+0.91 ± 0.72 trimmed), p ≈ 0.007–0.02 against the |z| > 1.96 bar for a single planned comparison.
++0.91 ± 0.72 trimmed), p of about 0.007–0.02 against the |z| > 1.96 bar for a single planned comparison.
 Validity was confirmed server-side: zero `get_MIE_file` executions, with 13 blocked attempts —
 the model still reflexively reached for it on about 7% of questions.
 
@@ -271,9 +271,9 @@ Table: The redundancy arc. The whole is worth roughly 2.7× the sum of its parts
 
 | Removed | Contribution | Significant? |
 | --- | ---: | --- |
-| one section (× 11) | ≤ +0.65 | no |
-| one group (× 3) | ≤ +0.20 | no |
-| Σ of the three groups | +0.34 | — |
+| one section (x 11) | at most +0.65 | no |
+| one group (x 3) | at most +0.20 | no |
+| Sum of the three groups | +0.34 | — |
 | **the whole MIE** | **+0.88 to +0.93** | **yes** |
 
 Super-additivity of this size is the signature of strong redundancy, and it disambiguates the
@@ -291,7 +291,7 @@ Table: Leave-one-in (sufficiency). "% gap" is the share of the +0.93 whole-MIE e
 
 | Group kept | Sufficiency (± 95% CI) | z | % gap | Complement |
 | --- | ---: | ---: | ---: | ---: |
-| **query** | **+0.92 ± 0.54** ✱ | **+3.32** | **99%** | +0.01 ± 0.54 |
+| **query** | **+0.92 ± 0.54** * | **+3.32** | **99%** | +0.01 ± 0.54 |
 | orientation | +0.41 ± 0.89 | +0.89 | 44% | +0.52 ± 0.78 |
 | guardrails | +0.12 ± 0.66 | +0.36 | 13% | +0.81 ± 0.64 |
 
@@ -318,7 +318,7 @@ Necessity is null everywhere; total value and the sufficiency of the query group
 ## Two secondary findings
 
 **The one robust behavioural effect is not about quality.** Removing `guardrails` *reduced* the
-number of SPARQL calls by −0.92 ± 0.92 per question, consistently across trimmed and untrimmed
+number of SPARQL calls by -0.92 ± 0.92 per question, consistently across trimmed and untrimmed
 analyses. The interval excludes zero only narrowly — at the precision printed here it touches it,
 and the significance rests on the unrounded values — but the direction is stable and the
 interpretation is clear: the warnings provoke defensive querying. Whether that is a cost or a
@@ -349,7 +349,7 @@ dangerous for exactly this reason.
 
 **2. An aggregate difference is not a per-question effect.** Removing `sparql_query_examples`
 drove SPARQL calls from 466 to 585 across the run — a 25% increase, and initially our clearest
-result. It does not survive pairing: per-question counts vary enormously (paired SD ≈ 3.2), and
+result. It does not survive pairing: per-question counts vary enormously (paired SD of about 3.2), and
 the paired delta was +0.87 ± 1.07, comfortably including zero. The ratio was reading a sum as an
 effect.
 
@@ -398,7 +398,7 @@ a near-identical refusal message on benign microbiology questions; four question
 4/20, an imbalanced split distorts a delta badly: one batch's raw +1.31 fell to **+0.58** once
 refusals were excluded — a genuine edge survived, but more than half the apparent effect was
 refusal luck rather than capability. At the level of a single question the distortion can account
-for the entire apparent result: one question's −5.3 vanished completely once its refused cells
+for the entire apparent result: one question's -5.3 vanished completely once its refused cells
 were dropped. Detect them by signature, report raw and clean, and trust the clean number.
 
 Underlying all of these is a ceiling problem. With a baseline of 16.7–17.1 out of 20 and a
@@ -458,9 +458,9 @@ improvement.
 Before authoring 36 files we swapped two, and ran the 25 benchmark questions in which one of them
 is one of exactly two databases — the subset where a swapped MIE accounts for half the database
 content, and therefore gives the strongest per-question signal. The average was flat
-(−0.44 ± 0.82; the UniProt slice −0.13 over 20 questions), just inside the declared bail bar and
+(-0.44 ± 0.82; the UniProt slice -0.13 over 20 questions), just inside the declared bail bar and
 so a yellow light rather than a green one — and it decomposed non-randomly, with the multi-step
-types regressing (factoid −1.09, list −1.04) while the easier ones improved. Underneath sat one
+types regressing (factoid -1.09, list -1.04) while the easier ones improved. Underneath sat one
 systematic regression. On q066 — reviewed human proteins with a LIM domain — v3 retrieved 14
 candidate proteins against the true 71, and named the wrong winner on all three replicates.
 
@@ -490,7 +490,7 @@ not a lost route. The GlyCosmos endpoint hosts **its own partial snapshot of the
 and v3 was querying it self-consistently: its `subClassOf*` closure yields 14 terms and therefore
 44 genes. The correct answer requires expanding on the authoritative `go` database — 33 terms —
 and joining the result back, giving 208, exactly the gold answer. We added a first-class
-two-database enumeration example; q022 moved from −5.7 to **+1.0**, and v3 became *more* stable
+two-database enumeration example; q022 moved from -5.7 to **+1.0**, and v3 became *more* stable
 than v2, which had reached 208 only by calling an external ontology service and collapsed to 44
 on one of its own runs. The general lesson: **a co-hosted ontology snapshot is not the ontology**,
 and an agent has no way to discover that on its own.
@@ -504,24 +504,24 @@ five further batches of 25, 15, 25, 10 and 15, with a review gate after each.
 questions accumulate, while continuing to straddle zero; the lower bound remains far inside the
 pre-declared non-regression margin.](./ci_ladder.png)
 
-At n=100, the refusal-clean paired difference is **+0.293/20 with a 95% CI of [−0.09, +0.68]**
+At n=100, the refusal-clean paired difference is **+0.293/20 with a 95% CI of [-0.09, +0.68]**
 across 96 usable questions; alternative estimators agree (pooled +0.343, strict-all-clean +0.368),
 and the per-question tally is 36 better, 33 tied, 27 worse. The interval straddles zero, so this
 is **genuine equivalence and not a proven gain** — the mild positive tilt should not be
-over-claimed. What the data does support is the non-regression conclusion: a lower bound of −0.09
-sits far inside the declared −0.5 margin.
+over-claimed. What the data does support is the non-regression conclusion: a lower bound of -0.09
+sits far inside the declared -0.5 margin.
 
 By question type, the pattern matches what v3 was designed to do:
 
 Table: Change in judge score by question type at n=100 (refusal-clean).
 
-| Type | Δ (v3 − v2) |
+| Type | Change (v3 - v2) |
 | --- | ---: |
 | factoid | **+1.01** |
 | yes_no | +0.54 |
 | list | +0.18 |
 | choice | +0.16 |
-| summary | −0.42 |
+| summary | -0.42 |
 
 Factoid questions — the query-construction and aggregation cases the executable worked examples
 target directly — gain a full point. The recall sub-score rises +0.16 overall, corroborating that
@@ -533,14 +533,14 @@ The deterministic win, measured at runtime rather than inferred from file sizes:
 
 Table: Per-question runtime cost at n=100 (279 clean v2 cells, 282 clean v3).
 
-| Metric (per question) | v2 | v3 | Δ |
+| Metric (per question) | v2 | v3 | Change |
 | --- | ---: | ---: | ---: |
-| total input tokens | 73,059 | 61,790 | **−15.4%** |
-| · cache-read | 71,394 | 59,255 | −17.0% |
+| total input tokens | 73,059 | 61,790 | **-15.4%** |
+| · cache-read | 71,394 | 59,255 | -17.0% |
 | · cache-creation | 1,658 | 2,527 | +52.4% |
 | output tokens | 656 | 686 | +4.6% |
-| cost (USD) | 0.52 | 0.44 | **−14.8%** |
-| wall time (s) | 150.9 | 142.0 | **−5.9%** |
+| cost (USD) | 0.52 | 0.44 | **-14.8%** |
+| wall time (s) | 150.9 | 142.0 | **-5.9%** |
 
 A 29–65% reduction in file size lands as a 15% reduction in *total* input tokens because the MIE
 is a large but partial share of per-question context — system prompt, tool schemas, SPARQL result
@@ -607,7 +607,7 @@ question set is a cheap general guard.
 
 **Limitations.** A single answering model and a single judge family; one benchmark, whose ceiling
 of roughly 17/20 caps the effect sizes that can be resolved; a 40-question pilot for the
-ablations, where our best near-miss would have needed n ≈ 73–88; LLM-as-judge scoring, with its
+ablations, where our best near-miss would have needed n of about 73–88; LLM-as-judge scoring, with its
 known biases; roughly 5% refusal contamination; and an equivalence result that is equivalence,
 not superiority. We also measured a single format against a single alternative — v3 is evidence
 that *this* reorganization preserves value at fewer tokens, not that it is optimal.
@@ -621,7 +621,7 @@ failure. Third, **per-query outcome logging** — recording whether each `run_sp
 a syntax error, an empty result, or rows — which would be a far sharper effort metric than
 counting calls, and a direct test of whether query-guidance content does what it claims. For
 statistical power, the variance decomposition says to buy precision with answer replicates rather
-than judge replicates, and to make exact-answer correctness the primary endpoint at n ≥ 150.
+than judge replicates, and to make exact-answer correctness the primary endpoint at n of 150 or more.
 Finally, cross-model replication, and applying the same measure-then-redesign loop to the other
 large piece of LLM-facing text in the system, the Usage Guide.
 
