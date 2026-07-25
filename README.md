@@ -9,8 +9,8 @@ because someone believed it would help. Nobody had checked whether it did. This 
 finding out, and about what the answer implied for the format.
 
 **The finding.** Removing any single section is null. Removing any whole functional group is null.
-Removing *everything* costs +0.9/20 — the whole is worth ~2.7× the sum of its parts, the signature
-of heavy redundancy. And one group alone, the query-construction content, recovers 99% of the
+Removing *everything* costs 0.9 points out of 20, against a fully equipped baseline that already
+scores 17/20 — the whole is worth ~2.7× the sum of its parts, the signature of heavy redundancy. And one group alone, the query-construction content, recovers 99% of the
 total. The value was real, distributed, and concentrated somewhere specific.
 
 **The consequence.** MIE v3 reorganizes around that evidence, with the verified executable example

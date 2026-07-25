@@ -6,10 +6,14 @@ TogoMCP repository:
   benchmark/ablation/FINDINGS.md           (Figs 1-2)
   benchmark/redesign/release/FINDINGS.md   (Fig 3)
 """
+from pathlib import Path
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+
+OUT = Path(__file__).resolve().parent
 
 INK = "#1c1c1c"
 MUTED = "#8a8a8a"
@@ -138,7 +142,7 @@ def redundancy_arc():
             va="top", linespacing=1.6)
 
     fig.tight_layout()
-    fig.savefig("/home/claude/out/redundancy_arc.png", bbox_inches="tight",
+    fig.savefig(OUT / "redundancy_arc.png", bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
 
@@ -187,7 +191,7 @@ def ci_ladder():
             transform=ax.transAxes, fontsize=8.0, color="#555555", va="bottom")
 
     fig.tight_layout()
-    fig.savefig("/home/claude/out/ci_ladder.png", bbox_inches="tight",
+    fig.savefig(OUT / "ci_ladder.png", bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
 
@@ -291,15 +295,13 @@ def format_map():
             "one verified query IS the shape, the sample triple, and the annotated trap.",
             fontsize=7.4, color="#555555", va="top", linespacing=1.6, style="italic")
 
-    fig.savefig("/home/claude/out/format_map.png", bbox_inches="tight",
+    fig.savefig(OUT / "format_map.png", bbox_inches="tight",
                 facecolor="white")
     plt.close(fig)
 
 
 if __name__ == "__main__":
-    import os
-    os.makedirs("/home/claude/out", exist_ok=True)
     format_map()
     redundancy_arc()
     ci_ladder()
-    print("ok")
+    print(f"ok — three PNGs written to {OUT}")
