@@ -63,10 +63,11 @@ faces the same question, usually answers it by intuition, and rarely gets any fe
 We set out to answer it empirically for TogoMCP, and this report is about the answer and the way
 we got it. Our contributions are four:
 
-1. **A reusable ablation harness and statistical protocol** for LLM-facing documentation,
-   organized as an escalating series of four question types — is a part *necessary*, is a
-   functional group *necessary*, is the whole thing worth anything, and is any one group
-   *sufficient*.
+1. **A reusable ablation harness and statistical protocol** for LLM-facing documentation, built
+   around four question types — is a part *necessary*, is a functional group *necessary*, is the
+   whole thing worth anything, and is any one group *sufficient* — together with a corrected
+   recommendation about which order to ask them in, since the order we chose spent the most on
+   the least.
 2. **The finding**: the value of our documentation is real but heavily redundant, and it is
    concentrated almost entirely in query-construction content. Removing any single section, or
    any whole functional group, costs nothing measurable. Removing all of it costs ~0.9 points
@@ -121,10 +122,12 @@ of total corpus bytes.
 | **orientation** | `architectural_notes`, `data_statistics`, `sample_rdf_entries` | 22% |
 
 Inspecting the corpus by hand suggested a specific hypothesis, which the ablations were designed
-to test: the redundancy was **orthogonal**. The same predicate-level fact was frequently restated
-up to three ways — once as a ShEx shape in `shape_expressions`, once as a sample triple in
-`sample_rdf_entries`, and once inside a worked query in `sparql_query_examples` — with the
-`cross_references` list acting as a loose fourth restatement for cross-reference predicates.
+to test: **the same fact was routinely documented three times over, each time in a different
+form.** A single predicate might appear once as a ShEx shape in `shape_expressions` — stating it
+as a declarative constraint — once as a sample triple in `sample_rdf_entries`, showing it as a
+concrete instance, and once inside a worked query in `sparql_query_examples`, using it as an
+executable step. Three modes of expression, one underlying fact, three separate sections; the
+`cross_references` list acted as a loose fourth restatement for cross-reference predicates.
 (`schema_info` is not one of these; it is the file's metadata header, and it survives into v3.)
 If that hypothesis were right, no single section would ever look necessary, because its siblings
 would cover for it.
@@ -148,11 +151,10 @@ at that corpus via an environment variable, and the benchmark is run against it 
 sessions with no conversation history. Each condition is compared against a baseline run in the
 same batch.
 
-We ran four families of condition, and the order matters, because it is the argument:
+We ran four families of condition, in this order:
 
 1. **Leave one section out** (11 conditions). Asks: is this section *necessary*, given that the
-   other ten remain? Cheap and obvious — and, as it turns out, unable to answer the question
-   anyone actually cares about.
+   other ten remain?
 2. **Leave one group out** (3 conditions). Asks the same question with redundancy partly
    suppressed: if `shape_expressions` was covered for by `sparql_query_examples`, removing both
    at once should expose the loss.
@@ -164,9 +166,31 @@ We ran four families of condition, and the order matters, because it is the argu
 
 Families 1 and 2 measure necessity; family 3 measures total value; family 4 measures
 sufficiency. **A null in family 1 or 2 is ambiguous between "worthless" and "redundant", and
-only families 3 and 4 can disambiguate it.** We recommend this ordering to anyone repeating the
-exercise: run the cheap necessity tests first, and escalate to the expensive ones precisely
-because the cheap ones came back null.
+only families 3 and 4 can disambiguate it.**
+
+**We would not run them in this order again, and the reason is worth more than the results.**
+Cost scales with the number of conditions, so the family that asks the narrowest question —
+eleven separate leave-one-outs — is also by far the most expensive. It consumed roughly US\$845,
+more than families 3 and 4 combined (four conditions, about US\$280), and it produced nothing that
+changed the design. The two cheap families produced both findings that did.
+
+Worse, the section sweep was underpowered by construction, and knowably so. Its multiple-comparison
+bar is |z| > 2.84. Had we first learned what family 3 later told us — that the entire document is
+worth about 0.9 points out of 20 — we could have computed that value spread over eleven sections
+implies per-section effects near 0.08, which no achievable sample size would resolve on a
+benchmark whose baseline already sits at 17/20. The one experiment that could have set that
+expectation, whole-MIE removal, is a **single condition**: the cheapest thing we ran, and the only
+one whose result gates the interpretation of everything else.
+
+So the ordering we would recommend is close to the reverse of the one we followed. Start with
+**total removal** — one condition, and if it is null you are done, because no decomposition can
+find value that the whole does not have. Use its effect size as the budget you are allocating.
+Then **leave-one-in at the group level**, which localizes that value cheaply; `keep_query` alone
+answered the design question. Only then consider **per-component leave-one-out**, and only if the
+total effect is large enough that the per-component share could clear a corrected threshold at an
+affordable *n*. Leave-one-out is the reflexive default in ablation work, and for documentation —
+where redundancy is expected, total effects are small, and judge scores saturate — it is close to
+the worst place to start.
 
 Every effect reported below is a **paired per-question difference with a 95% confidence
 interval**, never an aggregate ratio (see Trap 2). We report trimmed analyses that exclude
@@ -528,10 +552,17 @@ measurable questions.
 
 **Redundancy is invisible to leave-one-out.** This is the finding we would most want carried
 elsewhere. "Not individually necessary given everything else" is not "worthless," and a null
-leave-one-out result licenses neither conclusion on its own. Distinguishing them requires the
-expensive conditions — total removal, to establish that there is any value at all, and
-leave-one-in, to locate it. Our four families only tell a coherent story as a set: null, null,
-significant, sufficient.
+leave-one-out result licenses neither conclusion on its own. Distinguishing them requires total
+removal, to establish that there is any value at all, and leave-one-in, to locate it. Our four
+families only tell a coherent story as a set: null, null, significant, sufficient.
+
+The corollary is a budgeting one, and it is the single thing we would change about how we ran
+this. Those two decisive families are also the *cheap* ones — four conditions between them
+against eleven for the leave-one-out sweep that answered nothing. We spent the most money on the
+least informative experiment because leave-one-out is the reflexive first move, and we did it
+before we had any estimate of the total effect it was trying to decompose. Measure the whole
+first; it costs one condition, and it tells you whether the decomposition you were planning is
+affordable or arithmetically hopeless.
 
 **The verified example is the right atomic unit for LLM-facing schema documentation.** A single
 executable query carries the shape, an instance, and the trap simultaneously, in the form the
