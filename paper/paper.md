@@ -40,8 +40,8 @@ authors_short: Kinjo \emph{et al.}
 
 # Introduction
 
-TogoMCP exposes the RDF Portal knowledge graph maintained by DBCLS — some 36 life-science
-SPARQL endpoints — to large language models through the Model Context Protocol, so that a
+TogoMCP exposes the RDF Portal knowledge graph maintained by DBCLS — which aggregates roughly 60
+life-science databases — to large language models through the Model Context Protocol, so that a
 researcher can ask a biological question in natural language and have an agent compose,
 execute, and interpret the SPARQL that answers it [@citesAsAuthority:Kinjo2026TogoMCP]. The
 mechanism that makes this work is not the model's SPARQL fluency but the **MIE**
@@ -94,6 +94,13 @@ load-bearing tools are `run_sparql`, which executes a query against a named RDF 
 E-utilities, TogoVar). The published description of the system and its original 50-question
 evaluation is in *Database* [@citesAsAuthority:Kinjo2026TogoMCP]; that work established that MIE
 files help **in aggregate**. The present work asks which parts of them do.
+
+TogoMCP currently documents **36 of the portal's databases, one MIE file each** — and those 36 are
+served by only **ten distinct SPARQL endpoints**. Sixteen of them share a single endpoint. That
+many-to-one structure is not incidental to this report: a query that fails to scope itself to the
+right named graph silently ranges over its neighbours, so co-tenancy is a recurring source of
+count inflation and one of the things an MIE file exists to warn about. It is why the v3 header
+carries an explicit `co_hosted` flag for every dataset sharing an endpoint.
 
 The format has a BioHackathon lineage of its own. It was largely formalized at the DBCLS
 BioHackathon 2025 in Mie Prefecture, and takes its name from there; the backronym
