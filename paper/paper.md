@@ -390,7 +390,10 @@ a glance.
 
 ![The redundancy arc. Eleven sections, three groups, the whole MIE, and three sufficiency
 conditions, all as paired per-question effects on judge score with 95% confidence intervals.
-Necessity is null everywhere; total value and the sufficiency of the query group are not. Rows are
+Necessity is null everywhere; total value and the sufficiency of the query group are not. The
+shaded band marks the whole-MIE effect, +0.88 to +0.93. The daggered rows are not clean
+leave-one-outs: dropping `schema_info` — and with it the query group that contains it — also
+disables the `find_databases` discovery tool, making both dual ablations (Trap 3). Rows are
 comparable within a block but not across blocks: the two necessity blocks pair against their own
 baselines (17.13/20 for the sections, a separate in-batch 16.88/20 for the groups and the whole
 MIE), while sufficiency is measured against the no-MIE condition rather than against a baseline.

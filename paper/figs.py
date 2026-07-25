@@ -133,14 +133,10 @@ def redundancy_arc():
             "and keeping the query group alone recovers 99% of it.   ✱ = 95% CI excludes 0.",
             transform=ax.transAxes, fontsize=8.2, color="#555555", va="bottom",
             linespacing=1.5)
-    ax.text(0, -0.095,
-            "† schema_info — and the query group that contains it — also disables the "
-            "find_databases discovery tool, making these dual ablations\n"
-            "rather than clean leave-one-outs. Shaded band = the whole-MIE effect "
-            "(+0.88 to +0.93).\n"
-            "Reference conditions and trimming differ by block — see the caption.",
-            transform=ax.transAxes, fontsize=7.2, color="#666666",
-            va="top", linespacing=1.6)
+    # No in-panel footnote: the PNG is scaled to roughly 0.7 in the body column,
+    # so anything set below ~10pt here lands under the legibility floor in the
+    # PDF. The daggers, the shaded band and the per-block caveats are all
+    # explained in the caption instead.
 
     fig.tight_layout()
     fig.savefig(OUT / "redundancy_arc.png", bbox_inches="tight",
