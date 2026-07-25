@@ -20,12 +20,77 @@
   doi     = {10.1186/2041-1480-1-S1-S6}
 }
 
-% TODO: add as the draft cites them —
-%   - RDF Portal / DBCLS resource paper
-%   - Model Context Protocol specification
-%   - TogoID (Ikeda et al., Bioinformatics 2022)
-%   - LLM-as-judge methodology reference
-%   - a text-to-SPARQL / schema-grounding reference for the Introduction
+% Entries below are shared with the TogoMCP Database paper's bibliography.
+
+@article{kawashima2018rdfportal,
+  author  = {Kawashima, Shuichi and Katayama, Toshiaki and Hatanaka, Hideki and Kushida, Tatsuya and Takagi, Toshihisa},
+  title   = {{NBDC} {RDF} portal: a comprehensive repository for semantic data in life sciences},
+  journal = {Database},
+  year    = {2018},
+  volume  = {2018},
+  pages   = {bay123},
+  doi     = {10.1093/database/bay123}
+}
+
+@misc{MCP2025Spec,
+  author       = {{Anthropic}},
+  title        = {{Model Context Protocol} specification, revision 2025-11-25},
+  year         = {2025},
+  howpublished = {\url{https://modelcontextprotocol.io/specification/2025-11-25}},
+  note         = {Accessed 2026-07-24}
+}
+
+@article{kawano2022togoid,
+  author  = {Ikeda, Shuya and Ono, Hiromasa and Ohta, Tazro and Chiba, Hirokazu and Naito, Yuki and Moriya, Yuki and Kawashima, Shuichi and Yamamoto, Yasunori and Okamoto, Shinobu and Goto, Susumu and Katayama, Toshiaki},
+  title   = {{TogoID}: an exploratory {ID} converter to bridge biological datasets},
+  journal = {Bioinformatics},
+  year    = {2022},
+  volume  = {38},
+  number  = {17},
+  pages   = {4194--4199},
+  doi     = {10.1093/bioinformatics/btac491}
+}
+
+@inproceedings{zheng2023llmjudge,
+  author    = {Zheng, Lianmin and Chiang, Wei-Lin and Sheng, Ying and Zhuang, Siyuan and Wu, Zhanghao and Zhuang, Yonghao and Lin, Zi and Li, Zhuohan and Li, Dacheng and Xing, Eric P. and Zhang, Hao and Gonzalez, Joseph E. and Stoica, Ion},
+  title     = {Judging {LLM}-as-a-judge with {MT-Bench} and {C}hatbot {A}rena},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {36},
+  year      = {2023},
+  doi       = {10.48550/arXiv.2306.05685}
+}
+
+@article{tsatsaronis2015bioasq,
+  author  = {Tsatsaronis, George and Balikas, Georgios and Malakasiotis, Prodromos and Partalas, Ioannis and Zschunke, Matthias and Albers, Michael R. and Weissenborn, Dirk and Krithara, Anastasia and Petridis, Sergios and Polychronopoulos, Dimitris and Almirantis, Yannis and Pavlopoulos, John and Baskiotis, Nicolas and Gallinari, Patrick and Arti{\`e}res, Thierry and Ngomo, Axel-Cyrille Ngonga and Heino, Norman and Gaussier, Eric and Barber, Liliana and Salakoski, Tapio and Skarabot, Stelios and Androutsopoulos, Ion and Paliouras, Georgios},
+  title   = {An overview of the {BioASQ} large-scale biomedical semantic indexing and question answering competition},
+  journal = {BMC Bioinformatics},
+  year    = {2015},
+  volume  = {16},
+  pages   = {138},
+  doi     = {10.1186/s12859-015-0564-6}
+}
+
+@article{emonet2024sparql,
+  author  = {Emonet, Vincent and Bolleman, Jerven and Duvaud, Severine and Mendes de Farias, Tarcisio and Sima, Ana Claudia},
+  title   = {{LLM}-based {SPARQL} query generation from natural language over federated knowledge graphs},
+  journal = {arXiv preprint},
+  year    = {2024},
+  eprint  = {2410.06062},
+  archiveprefix = {arXiv},
+  doi     = {10.48550/arXiv.2410.06062}
+}
+
+@inproceedings{zahera2024cotsparql,
+  author    = {Zahera, Hamada M. and Sherif, Mohamed Ahmed and Ngonga Ngomo, Axel-Cyrille},
+  title     = {Generating {SPARQL} from natural language using chain-of-thoughts prompting},
+  booktitle = {Proceedings of the 20th International Conference on Semantic Systems (SEMANTiCS 2024)},
+  series    = {Studies on the Semantic Web},
+  volume    = {60},
+  pages     = {353--368},
+  publisher = {IOS Press},
+  year      = {2024},
+  doi       = {10.3233/SSW240028}
+}
 
 @software{TogoMCPv200,
   author    = {Yamamoto, Yasunori and Kinjo, Akira R.},
