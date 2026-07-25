@@ -1,100 +1,72 @@
-# BioHackrXiv Publication Template
+# Measure before you rewrite
 
-Minimal example of a [BioHackrXiv](https://biohackrxiv.org/) publication that can be generated with the
-[Preview Service](http://preview.biohackrxiv.org/).
+A BioHackrXiv report on the ablation-driven redesign of **MIE files** — the per-database schema
+documents that [TogoMCP](https://togomcp.rdfportal.org/) delivers to an LLM agent at query time so
+it can compose SPARQL against the DBCLS [RDF Portal](https://rdfportal.org/).
 
-## Step 1: Clone this Template Repository
+The MIE format had grown to eleven hand-authored sections across 36 databases, each section added
+because someone believed it would help. Nobody had checked whether it did. This report is about
+finding out, and about what the answer implied for the format.
 
-This repository is a template repository. This means that you can hit the green "Use this template"
-button (after logging in) to use it as a template to start a new BioHackrXiv Publication:
+**The finding.** Removing any single section is null. Removing any whole functional group is null.
+Removing *everything* costs +0.9/20 — the whole is worth ~2.7× the sum of its parts, the signature
+of heavy redundancy. And one group alone, the query-construction content, recovers 99% of the
+total. The value was real, distributed, and concentrated somewhere specific.
 
-![Screenshot of the green "Use this template" button.](paper/use-this-template.png)
+**The consequence.** MIE v3 reorganizes around that evidence, with the verified executable example
+as the atomic unit — one example *is* the shape, the sample triple, and the annotated trap. At
+n=100 benchmark questions it is statistically indistinguishable from v2 in answer quality while
+using **15% fewer input tokens**, costing **15% less**, and running **6% faster**, with the
+factoid-question score up a full point.
 
-Note: after you have cloned this template, you are expected to change the license to match that
-of your preprint, allowing you to submit the preprint as CC-BY to BioHackrXiv.
+The report also documents eight measurement traps that faked or destroyed signal along the way —
+a banked baseline that made eleven independent-looking results out of one, a harness bug that
+silently voided nine days of sweeps, token accounting that omitted the prompt-cache buckets where
+the whole effect was billed — and a correction to our own method: we spent the most money on the
+least informative experiment, and say why we would not do that again.
 
-## Step 2: Configuring the Markdown
+## Contents
 
-The publication Markdown is found in the `paper/paper.md` file. At the top you can edit the
-YAML code with metadata. It is important to get this part correct, because otherwise the PDF
-generation will fail. The metadata looks like this:
+| Path | |
+| --- | --- |
+| [`paper/paper.md`](paper/paper.md) | The report (source of record) |
+| [`paper/paper.pdf`](paper/paper.pdf) | Built automatically from `paper.md` on push to `main` |
+| [`paper/paper.bib`](paper/paper.bib) | Bibliography |
+| [`paper/figs.py`](paper/figs.py) | Regenerates all three figures |
+| [`paper/OUTLINE.md`](paper/OUTLINE.md) | Drafting plan and open questions |
 
-```yaml
-title: 'BioHackEU22 Report for Project 26: Shedding the light on unknown chemical substances'
-title_short: 'BioHackEU22 #26: unknown chemical substances'
-tags:
-  - cheminformatics
-  - PubChem
-  - unknown chemical substances
-authors:
-  - name: Egon Willighagen
-    orcid: 0000-0001-7542-0286
-    affiliation: 1
-affiliations:
-  - name: Dept of Bioinformatics - BiGCaT, NUTRIM, FHML, Maastricht University, Maastricht, NL
-    ror: 02jz4aj89
-    index: 1
-date: 7 November 2022
-cito-bibliography: paper.bib
-event: BH22EU
-biohackathon_name: "BioHackathon Europe 2022"
-biohackathon_url:   "https://biohackathon-europe.org/"
-biohackathon_location: "Paris, France, 2022"
-group: Unknown chemical substances group
-# URL to project git repo --- should contain the actual paper.md:
-git_url: https://github.com/biohackrxiv/publication-template
-# This is the short authors description that is used at the
-# bottom of the generated paper (typically the first two authors):
-authors_short: Egon Willighagen \emph{et al.}
+## Figures
+
+All figure data is transcribed from the durable `FINDINGS.md` records in the TogoMCP repository;
+no result CSVs are needed.
+
+```bash
+pip install matplotlib
+python paper/figs.py        # writes the three PNGs into paper/
 ```
 
-### Which metadata to update?
+## Building the PDF
 
-#### To change
+`.github/workflows/gen_pdf.yaml` renders `paper/paper.md` through the BioHackrXiv service on every
+push to `main` and commits the result back. To preview a draft by hand, point the
+[BioHackrXiv Preview Service](http://preview.biohackrxiv.org/) at this repository.
 
-The following fields should be changed:
+## Underlying work
 
-* title
-* title_short
-* tags
-* authors (name and optionally their ORCID identifier)
-* affiliations
-* date
-* group
-* authors_short
+- **TogoMCP** — <https://togomcp.rdfportal.org/> · source at <https://github.com/dbcls/togomcp>.
+  The ablation harness, the 100-question benchmark, the MIE v3 corpus and specification, and the
+  `FINDINGS.md` records behind every number in this report all live there.
+- **Archived snapshot** (release v2.0.0, the version everything was measured against) —
+  [doi:10.5281/zenodo.21543297](https://doi.org/10.5281/zenodo.21543297)
+- **The system paper**, which describes TogoMCP and is based on MIE v2 —
+  Kinjo *et al.*, *Database* **2026**:baag042,
+  [doi:10.1093/database/baag042](https://doi.org/10.1093/database/baag042)
 
-Particularly important to update is the following field, which should point to
-your clone of the template, instead of the template itself:
+## Citation
 
-* git_url: https://github.com/biohackrxiv/publication-template
+Until the preprint is posted, cite the archived software snapshot above. The report's own DOI will
+be added here on publication.
 
-#### Only update for other BioHackathons
+## License
 
-The following fields should only be changed if you are not writing for the BioHackathon Europe 2022:
-
-* event: BH22EU
-* biohackathon_name: "BioHackathon Europe 2022"
-* biohackathon_url:   "https://biohackathon-europe.org/"
-* biohackathon_location: "Paris, France, 2022"
-
-## Step 3: Writing the article
-
-A full Markdown example is given in [paper/paper.md](paper/paper.md). This includes instructions how to include
-figures, tables, and annotate citations with the Citation Typing Ontology.
-
-## Step 4: Previewing the paper as PDF
-
-This repository can be converted into a preview PDF with BioHackrXiv [Preview Server](http://preview.biohackrxiv.org/).
-The preview website asks for the link to your repository and will automatically find the `paper.md` and create an PDF.
-
-## Troubleshooting
-
-### The first page is badly formatted
-
-Sometimes the list of authors plus affiliations runs over the page. We are working on a fix, but in the mean time you can try to shorten the affiliations. If that does not work move the affiliations into a repo and put the affiliations on a web page and use something like
-
-```yaml
-affiliations:
-  - name: For remaining affiliations see \url{https://github.com/project/etc} \vspace{0.2in}
-    index: \*
-```
+[CC BY 4.0](LICENSE).
