@@ -1,8 +1,11 @@
 # Measure before you rewrite
 
+[![DOI](https://img.shields.io/badge/DOI-10.37044%2Fosf.io%2F6v5ra__v1-blue)](https://doi.org/10.37044/osf.io/6v5ra_v1)
+
 A BioHackrXiv report on the ablation-driven redesign of **MIE files** — the per-database schema
 documents that [TogoMCP](https://togomcp.rdfportal.org/) delivers to an LLM agent at query time so
 it can compose SPARQL against the DBCLS [RDF Portal](https://rdfportal.org/).
+Published 26 July 2026: [doi:10.37044/osf.io/6v5ra_v1](https://doi.org/10.37044/osf.io/6v5ra_v1).
 
 The MIE format had grown to eleven hand-authored sections across 36 databases, each section added
 because someone believed it would help. Nobody had checked whether it did. This report is about
@@ -64,8 +67,24 @@ push to `main` and commits the result back. To preview a draft by hand, point th
 
 ## Citation
 
-Until the preprint is posted, cite the archived software snapshot above. The report's own DOI will
-be added here on publication.
+Kinjo, A. R. & Yamamoto, Y. (2026). *Measure before you rewrite: ablation-driven redesign of
+LLM-facing RDF schema documentation in TogoMCP*. BioHackrXiv.
+[doi:10.37044/osf.io/6v5ra_v1](https://doi.org/10.37044/osf.io/6v5ra_v1)
+
+```bibtex
+@article{Kinjo2026MeasureBeforeYouRewrite,
+  author  = {Kinjo, Akira R. and Yamamoto, Yasunori},
+  title   = {{Measure before you rewrite: ablation-driven redesign of LLM-facing RDF schema
+             documentation in TogoMCP}},
+  journal = {BioHackrXiv},
+  year    = {2026},
+  month   = {jul},
+  doi     = {10.37044/osf.io/6v5ra_v1},
+  url     = {https://doi.org/10.37044/osf.io/6v5ra_v1}
+}
+```
+
+To cite the measured system rather than the report, use the archived software snapshot above.
 
 ## License
 
